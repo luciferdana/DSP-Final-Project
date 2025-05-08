@@ -1,9 +1,12 @@
-# DSP FINAL PROJECT
+# Tugas Besar Mata Kuliah Digital Processing Signal (IF3024)
+
+## Dosen Pengampu: **Martin Clinton Tosima Manullang, S.T., M.T..**
 
 ## Anggota Kelompok
 
-| No | Nama              | NIM        |
-|----|-------------------|------------|
-| 1  | Ferdana Al-Hakim  | 122140012  |
-| 2  | Ihya Razky Hidayat| 122140167  |
+| **Nama**           | **NIM**   | **ID GITHUB**                                               |
+| -------------------| --------- | ----------------------------------------------------------- |
+| Ferdana Al- Hakim  | 122140012 | <a href="https://github.com/luciferdana">@luciferdana</a>   |
+| Ihya Razky Hidayat | 121140167 | <a href="https://github.com/Ecstarssyy">@Ecstarssyy</a>     |
+
 
