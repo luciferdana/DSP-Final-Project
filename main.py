@@ -3,10 +3,9 @@ from src.gui.main_window import MainWindow
 from PyQt5.QtWidgets import QApplication
 
 def main():
-    """Fungsi utama untuk menjalankan aplikasi"""
     app = QApplication(sys.argv)
     
-    # Gaya aplikasi (opsional)
+    # Gaya aplikasi 
     app.setStyle("Fusion")
     
     # Buat dan tampilkan jendela utama

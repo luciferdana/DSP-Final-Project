@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Modul yang berisi filter digital untuk pemrosesan sinyal.
 """
@@ -50,7 +52,12 @@ def moving_average(data, window_size):
     numpy.ndarray
         Data sinyal yang telah difilter
     """
-    return np.convolve(data, np.ones(window_size)/window_size, mode='valid')
+    # PERBAIKAN: Terapkan moving average dua kali untuk smoothing yang lebih baik
+    smoothed = np.convolve(data, np.ones(window_size)/window_size, mode='valid')
+    # Terapkan sekali lagi untuk hasil lebih halus
+    if len(smoothed) > window_size:
+        smoothed = np.convolve(smoothed, np.ones(max(3, window_size//2))/(max(3, window_size//2)), mode='valid')
+    return smoothed
 
 def detrend(data):
     """

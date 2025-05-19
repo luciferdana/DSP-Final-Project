@@ -1,7 +1,3 @@
-"""
-Modul untuk ekstraksi dan pemrosesan sinyal remote-photoplethysmography (rPPG).
-"""
-
 import numpy as np
 import cv2
 from src.signal.filters import bandpass_filter, moving_average, detrend
