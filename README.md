@@ -13,13 +13,6 @@ Sinyal respirasi didapatkan dengan memanfaatkan pose-landmarker dari MediaPipe u
 - Estimasi laju pernapasan dan denyut jantung secara real-time.
 - Pengolahan sinyal lanjutan dengan filter dan metode estimasi yang robust.
 
-## Teknologi yang Digunakan
-- Python 3.8+
-- MediaPipe untuk pose-landmark dan face detection
-- Library pemrosesan sinyal seperti NumPy, SciPy
-- OpenCV untuk pengolahan video
-- Tkinter untuk GUI
-
 ## Anggota Kelompok
 
 | Nama                    | NIM       | ID GITHUB                      |
