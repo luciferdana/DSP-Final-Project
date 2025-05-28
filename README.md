@@ -96,30 +96,6 @@ SignalScope adalah sebuah program yang dikembangkan sebagai Proyek Akhir mata ku
 
 ---
 
-## 📁 Struktur Folder (Contoh)
-
-.
-├── src/                          # Folder utama kode sumber
-│   ├── main.py                   # File utama program
-│   ├── signal_processing/        # Modul untuk fungsi pemrosesan sinyal
-│   │   ├── init.py
-│   │   ├── filters.py            # Fungsi-fungsi filter
-│   │   ├── rppg_extraction.py    # Fungsi ekstraksi rPPG
-│   │   └── respiration_extraction.py # Fungsi ekstraksi respirasi
-│   ├── detection_models/         # Modul untuk deteksi wajah/pose
-│   │   ├── init.py
-│   │   └── landmark_detector.py  # Logika penggunaan model .task & .tflite
-│   └── visualization/            # Modul untuk fungsi visualisasi
-│       ├── init.py
-│       └── plotters.py
-├── models/                       # Folder untuk menyimpan file model
-│   ├── pose_landmarker.task
-│   └── blaze_face_short_range.tflite
-├── assets/                       # (Jika ada) Aset seperti gambar contoh, dll.
-├── report.pdf                    # Laporan teknis proyek
-├── requirements.txt              # Daftar dependencies
-└── README.md                     # File ini
-
 
 ---
 
