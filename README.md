@@ -283,7 +283,6 @@ python test_models.py
 | **2** | 12-18 Mei | • **✅ Implementasi camera interface (OpenCV)**<br>• Basic face detection dengan Haar Cascade<br>• ROI extraction untuk rPPG (forehead area)<br>• Initial signal extraction algoritma | • Stabilitas ROI tracking<br>• Noise reduction pada raw signal<br>• **Solusi**: Buffer management & smoothing |
 | **3** | 19-25 Mei | • **✅ Digital filter design (Butterworth bandpass)**<br>• Parameter tuning untuk rPPG (0.7-3.5 Hz)<br>• Respirasi signal extraction (chest movement)<br>• **✅ Real-time visualization dengan PyQtGraph** | • Filter parameter optimization<br>• Respiratory vs body movement separation<br>• **Solusi**: Multi-method estimation |
 | **4** | 26 Mei-01 Jun | • **✅ MediaPipe integration (BlazeFace + Pose)**<br>• **✅ GUI development dengan PyQt5**<br>• Advanced ROI detection dengan pose landmarks<br>• **✅ Data export functionality** | • Real-time performance optimization<br>• Model integration challenges<br>• **Solusi**: Fallback mechanisms |
-| **5** | 02-08 Jun | • **✅ Code refinement & documentation**<br>• **✅ Testing & validation suite**<br>• Performance optimization<br>• **📝 Laporan penulisan** | • Final testing across different hardware<br>• Documentation completion<br>• **Prep**: Demo presentation |
 
 ---
 
