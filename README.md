@@ -282,7 +282,7 @@ python test_models.py
 | **1** | 05-11 Mei | • Pembentukan tim & setup project<br>• Studi literatur rPPG & respirasi analysis<br>• **✅ Repository setup & invite dosen**<br>• Design arsitektur modular | • Sinkronisasi pemahaman antar anggota<br>• Setup development environment<br>• Planning project structure |
 | **2** | 12-18 Mei | • **✅ Implementasi camera interface (OpenCV)**<br>• Basic face detection dengan Haar Cascade<br>• ROI extraction untuk rPPG (forehead area)<br>• Initial signal extraction algoritma | • Stabilitas ROI tracking<br>• Noise reduction pada raw signal<br>• **Solusi**: Buffer management & smoothing |
 | **3** | 19-25 Mei | • **✅ Digital filter design (Butterworth bandpass)**<br>• Parameter tuning untuk rPPG (0.7-3.5 Hz)<br>• Respirasi signal extraction (chest movement)<br>• **✅ Real-time visualization dengan PyQtGraph** | • Filter parameter optimization<br>• Respiratory vs body movement separation<br>• **Solusi**: Multi-method estimation |
-| **4** | 26 Mei-01 Jun | • **✅ MediaPipe integration (BlazeFace + Pose)**<br>• **✅ GUI development dengan PyQt5**<br>• Advanced ROI detection dengan pose landmarks<br>• **✅ Data export functionality** | • Real-time performance optimization<br>• Model integration challenges<br>• **Solusi**: Fallback mechanisms |
+| **4** | 28 Mei | • **✅ MediaPipe integration (BlazeFace + Pose)**<br>• **✅ GUI development dengan PyQt5**<br>• Advanced ROI detection dengan pose landmarks<br>• **✅ Data export functionality** | • Real-time performance optimization<br>• Model integration challenges<br>• **Solusi**: Fallback mechanisms |
 
 ---
 
