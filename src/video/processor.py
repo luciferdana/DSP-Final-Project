@@ -52,7 +52,7 @@ class VideoProcessor:
             self.mp_pose = mp_pose
             self.mp_face_detection = mp_face_detection
             
-            print("MediaPipe models loaded successfully from models/ directory")
+            print("MediaPipe models berhasil dimuat dari direktori models/")
             
         except Exception as e:
             print(f"Error loading MediaPipe models: {e}")
@@ -61,7 +61,7 @@ class VideoProcessor:
             self.face_cascade = cv2.CascadeClassifier(
                 cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
             )
-            print("Using OpenCV Haar Cascade as fallback")
+            print("Menggunakan OpenCV Haar Cascade sebagai fallback")
         else:
             self.use_opencv_fallback = False
     
@@ -120,6 +120,7 @@ class VideoProcessor:
     def get_forehead_roi(self, face_rect, frame):
         """
         Dapatkan area dahi untuk sinyal rPPG berdasarkan deteksi wajah.
+        ROI diperbesar untuk stabilitas sinyal yang lebih baik.
         
         Parameter
         ----------
@@ -138,14 +139,13 @@ class VideoProcessor:
         
         x, y, w, h = face_rect
         
-        # Definisikan area dahi sebagai bagian atas wajah
-        # Dahi biasanya berada di 20% bagian atas wajah
-        forehead_height = int(h * 0.25)  # 25% tinggi wajah
-        forehead_width = int(w * 0.8)    # 80% lebar wajah
+        # Area dahi yang diperbesar untuk stabilitas rPPG yang lebih baik
+        forehead_height = int(h * 0.35)  # 35% tinggi wajah (lebih besar)
+        forehead_width = int(w * 0.9)    # 90% lebar wajah (lebih lebar)
         
         # Posisi dahi (centered horizontally, di bagian atas wajah)
         forehead_x = x + int((w - forehead_width) / 2)
-        forehead_y = y + int(h * 0.1)    # Mulai dari 10% dari atas wajah
+        forehead_y = y + int(h * 0.08)   # Sedikit lebih tinggi untuk menghindari alis
         
         # Pastikan koordinat dalam batas frame
         frame_h, frame_w = frame.shape[:2]
@@ -162,6 +162,7 @@ class VideoProcessor:
     def get_chest_roi(self, frame):
         """
         Dapatkan area dada untuk sinyal respirasi menggunakan pose detection.
+        Prioritaskan area kulit yang terlihat untuk akurasi yang lebih baik.
         
         Parameter
         ----------
@@ -190,52 +191,75 @@ class VideoProcessor:
             landmarks = results.pose_landmarks.landmark
             h, w, _ = frame.shape
             
-            # Landmark indices untuk area dada
-            # 11: LEFT_SHOULDER, 12: RIGHT_SHOULDER
-            # 23: LEFT_HIP, 24: RIGHT_HIP
+            # Landmark indices untuk area dada dan leher
             left_shoulder = landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER.value]
             right_shoulder = landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
-            left_hip = landmarks[self.mp_pose.PoseLandmark.LEFT_HIP.value]
-            right_hip = landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP.value]
             
-            # Convert normalized coordinates to pixel coordinates
-            left_shoulder_x = int(left_shoulder.x * w)
-            left_shoulder_y = int(left_shoulder.y * h)
-            right_shoulder_x = int(right_shoulder.x * w)
-            right_shoulder_y = int(right_shoulder.y * h)
-            left_hip_x = int(left_hip.x * w)
-            left_hip_y = int(left_hip.y * h)
-            right_hip_x = int(right_hip.x * w)
-            right_hip_y = int(right_hip.y * h)
-            
-            # Definisikan area dada
-            chest_x_min = min(left_shoulder_x, right_shoulder_x, left_hip_x, right_hip_x)
-            chest_x_max = max(left_shoulder_x, right_shoulder_x, left_hip_x, right_hip_x)
-            chest_y_min = min(left_shoulder_y, right_shoulder_y)
-            chest_y_max = max(left_hip_y, right_hip_y)
-            
-            # Tambahkan margin dan batasi ke area dada saja (tidak sampai pinggul)
-            margin = 20
-            chest_x = max(0, chest_x_min - margin)
-            chest_y = max(0, chest_y_min + margin)  # Sedikit di bawah bahu
-            chest_width = min(w - chest_x, chest_x_max - chest_x_min + 2*margin)
-            
-            # Tinggi dada sekitar 2/3 dari jarak bahu ke pinggul
-            torso_height = chest_y_max - chest_y_min
-            chest_height = min(h - chest_y, int(torso_height * 0.6))
-            
-            # Pastikan ROI valid
-            if chest_width <= 0 or chest_height <= 0:
-                return None
-            
-            # Extract ROI
-            roi = frame[chest_y:chest_y+chest_height, chest_x:chest_x+chest_width]
-            roi_coords = (chest_x, chest_y, chest_width, chest_height)
-            
-            return roi, roi_coords
+            # Gunakan area leher untuk respirasi yang lebih akurat (area kulit)
+            try:
+                nose = landmarks[self.mp_pose.PoseLandmark.NOSE.value]
+                
+                # Koordinat dalam pixel
+                nose_x = int(nose.x * w)
+                nose_y = int(nose.y * h)
+                left_shoulder_x = int(left_shoulder.x * w)
+                left_shoulder_y = int(left_shoulder.y * h)
+                right_shoulder_x = int(right_shoulder.x * w)
+                right_shoulder_y = int(right_shoulder.y * h)
+                
+                # Area leher/chest atas (area kulit yang lebih responsif)
+                chest_center_x = (left_shoulder_x + right_shoulder_x) // 2
+                chest_center_y = (nose_y + left_shoulder_y + right_shoulder_y) // 3
+                
+                # Ukuran ROI yang lebih kecil tapi fokus pada area kulit
+                chest_width = abs(right_shoulder_x - left_shoulder_x)
+                chest_height = int(chest_width * 0.6)  # Rasio yang proporsional
+                
+                # Posisi ROI
+                chest_x = max(0, chest_center_x - chest_width // 2)
+                chest_y = max(0, chest_center_y - chest_height // 4)
+                
+                # Pastikan tidak keluar batas frame
+                chest_x = min(chest_x, w - chest_width)
+                chest_y = min(chest_y, h - chest_height)
+                
+                # Extract ROI
+                roi = frame[chest_y:chest_y+chest_height, chest_x:chest_x+chest_width]
+                roi_coords = (chest_x, chest_y, chest_width, chest_height)
+                
+                return roi, roi_coords
+                
+            except:
+                # Fallback ke metode shoulder-hip jika nose detection gagal
+                left_shoulder_x = int(left_shoulder.x * w)
+                left_shoulder_y = int(left_shoulder.y * h)
+                right_shoulder_x = int(right_shoulder.x * w)
+                right_shoulder_y = int(right_shoulder.y * h)
+                
+                # Area dada berdasarkan bahu
+                chest_x_min = min(left_shoulder_x, right_shoulder_x)
+                chest_x_max = max(left_shoulder_x, right_shoulder_x)
+                chest_y_min = min(left_shoulder_y, right_shoulder_y)
+                
+                # ROI parameters
+                margin = 20
+                chest_x = max(0, chest_x_min - margin)
+                chest_y = max(0, chest_y_min + margin)
+                chest_width = min(w - chest_x, chest_x_max - chest_x_min + 2*margin)
+                chest_height = min(h - chest_y, int(chest_width * 0.8))
+                
+                # Pastikan ROI valid
+                if chest_width <= 0 or chest_height <= 0:
+                    return None
+                
+                # Extract ROI
+                roi = frame[chest_y:chest_y+chest_height, chest_x:chest_x+chest_width]
+                roi_coords = (chest_x, chest_y, chest_width, chest_height)
+                
+                return roi, roi_coords
             
         except Exception as e:
-            print(f"Error in pose detection: {e}")
+            print(f"Error dalam pose detection: {e}")
             return None
     
     def get_chest_roi_fallback(self, face_rect, frame):
@@ -261,11 +285,11 @@ class VideoProcessor:
         x, y, w, h = face_rect
         frame_h, frame_w = frame.shape[:2]
         
-        # Estimasi posisi dada berdasarkan wajah
-        chest_w = int(w * 1.5)                # Lebih lebar dari wajah
-        chest_h = int(h * 1.2)                # Tinggi area dada
-        chest_x = max(0, x + w//2 - chest_w//2)  # Tengah dada sejajar dengan tengah wajah
-        chest_y = min(frame_h - chest_h, y + int(h * 1.5))  # Di bawah wajah
+        # Estimasi posisi dada berdasarkan wajah dengan fokus pada area leher
+        chest_w = int(w * 1.2)                # Sedikit lebih lebar dari wajah
+        chest_h = int(h * 0.8)                # Tinggi area leher/chest atas
+        chest_x = max(0, x + w//2 - chest_w//2)  # Tengah sejajar dengan wajah
+        chest_y = min(frame_h - chest_h, y + int(h * 1.1))  # Tepat di bawah wajah (area leher)
         
         # Pastikan ROI berada dalam batas frame
         chest_x = max(0, min(chest_x, frame_w - chest_w))
@@ -320,7 +344,7 @@ class VideoProcessor:
                     for detection in face_results.detections:
                         self.mp_drawing.draw_detection(output_frame, detection)
         except Exception as e:
-            print(f"Error drawing landmarks: {e}")
+            print(f"Error menggambar landmarks: {e}")
         
         return output_frame
     
