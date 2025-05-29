@@ -377,6 +377,5 @@ MIT License - Lihat file [LICENSE](LICENSE) untuk detail lengkap.
 
 **🎉 Developed with ❤️ by Ferdana Al-Hakim, Ihya Razky Hidayat, dan Rayhan Fadel Irwanto**
 
-*Advanced Real-time Biomedical Signal Processing through Computer Vision & Digital Signal Processing*
 
 </div>
