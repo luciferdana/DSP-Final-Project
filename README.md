@@ -16,7 +16,7 @@
 |----------|---------|------------|
 | Ferdana Al-Hakim | 122140012 | [@luciferdana](https://github.com/luciferdana) |
 | Ihya Razky Hidayat | 121140167 | [@Ecstarssyy](https://github.com/Ecstarssyy) |
-| Rayhan Fadel Irwanto | 121140238 | [@RayhanFadelIrwanto](https://github.com/RayhanFadelIrwanto) |
+| Rayhan Fadel Irwanto | 121140236 | [@RayhanFadelIrwanto](https://github.com/RayhanFadelIrwanto) |
 
 ---
 
