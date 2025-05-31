@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Modul yang berisi filter digital untuk pemrosesan sinyal.
+Dengan validasi untuk menangani NaN dan Inf values.
 """
 
 import numpy as np

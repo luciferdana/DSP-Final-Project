@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Modul untuk ekstraksi dan pemrosesan sinyal respirasi.
+Algoritma dioptimasi dengan validasi untuk menangani NaN dan Inf values.
+Fixed optical flow size mismatch issue.
 """
 
 import numpy as np
